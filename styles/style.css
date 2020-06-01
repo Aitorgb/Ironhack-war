@@ -1,0 +1,45 @@
+body {
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+#game-board {
+  background: url('../images/background.jpg') no-repeat center center;
+  background-size: cover;
+  height: 100vh;
+}
+
+canvas {
+  border: 2px solid black;
+  margin-top: 18em;
+  display: none;
+}
+
+#menu {
+  position: absolute;
+  left: 0;
+  top:18em;
+  right: 0;
+  margin: auto;
+  width: 1000px;
+  height: 500px;
+  background: url('../images/main-menu.png') no-repeat;
+  background-size:cover;
+}
+
+#play-button {
+  background: url('../images/btn-play.png') no-repeat;
+  margin-top: 25%;
+}
+
+#setting-button {
+  background: url('../images/btn-setting.png') no-repeat;
+}
+.button {
+  margin-left: 38%;
+  cursor: pointer;
+  height: 3.5em;
+
+}
+
