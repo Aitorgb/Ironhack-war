@@ -22,8 +22,9 @@ class Police {
         this.vx = 0
         this.vy = 0
         this.g = 0
+        this.life = 100
 
-        this._setListener()
+       
         this.weapon = new Weapon(this)
     }
 
@@ -43,77 +44,24 @@ class Police {
             this.height
         )
         this.weapon.draw()
-
+        this._checkCollision()
     }
 
     move() {
         this.vy += this.g
         this.x += this.vx
         this.y += this.vy
-        this._checkCollision()
         this.weapon.move()
       
     }
 
 
-    _setListener() {
-           document.addEventListener('keydown', event => {
-            switch(event.keyCode) {
-                case RIGHT_BUTTON:
-                    this.vx = 1
-                    this.cutY = 0
-                    this._animate()
-                    break;
-                case LEFT_BUTTON:
-                    this.cutY = 1
-                    this.vx = -1
-                    this._animate()
-                    break;
-                case UP_BUTTON:
-                    this.vy = -1;
-                    this._animate()
-                    break;
-                case DOWN_BUTTON:
-                    this.vy = 1;
-                    this._animate()
-                    break;
-                case SPACE:
-                    this._jump()
-                    break;
-                case M_BUTTON:
-                    this.weapon.shoot()
-            }
-        })
-
-        document.addEventListener('keyup', event => {
-            switch(event.keyCode) {
-                case RIGHT_BUTTON:
-                    this.vx = 0;
-                    break;
-                case LEFT_BUTTON:
-                    this.vx = 0;
-                    break;
-                case UP_BUTTON:
-                    this.vy = 0
-                    break;
-                case DOWN_BUTTON:
-                    this.vy = 0;
-                    break;
-            }
-        })
-    }
-
-
-    _jump() {
+    jump() {
         if (this._floor()){
             this.jump_position = this.y + this.height
             this.vy = -5
             this.g = 0.1
-            if(this.cutY === 0){
-            this.cutY = 2
-            } else {
-                this.cutY = 3
-            }
+            this.cutY === 0 ? this.cutY = 2 : this.cutY = 3
         }
         this._jumpstate = true
     }
@@ -125,7 +73,7 @@ class Police {
     }
 
 
-    _animate () {
+    animate () {
        
 
         this._img.frameIndex++
@@ -152,7 +100,18 @@ class Police {
             this.x = this._ctx.canvas.width * 0.10
         } else if (this.y + this.height >= this._ctx.canvas.height) {
             this.y = this._ctx.canvas.height - this.height
+        } else if (this.y <= this._ctx.canvas.height * 0.50 ) {
+            this.y = this._ctx.canvas.height * 0.50
         }
+
+    }
+
+
+    otherCollision(element) {
+        
+        const colX = this.x + this.width > element.x && this.x < element.x + element.w
+        const colY = this.y + this.height > element.y && this.y + (this.height * 0.85) < element.y + element.h
+        return colX && colY
 
     }
 

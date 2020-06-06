@@ -8,17 +8,19 @@ class BackgroundGame {
         this.h = this._ctx.canvas.height
         this._img = new Image()
         this._img.src = './images/City-sin-obstacles.png'
+        this.auxX = 0
+        this.back = true
+
 
         this.vx = 0
         this.vy = 0
         this.vgx = 0
 
-        this._setListener()
+        
 
     }
 
     draw() {
-        //ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
         this._ctx.drawImage(
             this._img,
             this.x,
@@ -44,35 +46,10 @@ class BackgroundGame {
         }else if (this.x > 0){
             this.x = 0
         }
-        
+
     }
 
 
-        _setListener() {
-                document.addEventListener('keydown', event => {
-                switch(event.keyCode) {
-                    case RIGHT_BUTTON:
-                        this.vx = -1
-                        break;
-                    case LEFT_BUTTON:
-                        this.vx = 1
-                        break;
-                    
-                }
-            })
     
-            document.addEventListener('keyup', event => {
-                switch(event.keyCode) {
-                    case RIGHT_BUTTON:
-                        this.vx = 0;
-                        break;
-                    case LEFT_BUTTON:
-                        this.vx = 0;
-                        break;
-                }
-            })
-        }
-    
-
 
 }

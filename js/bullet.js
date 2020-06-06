@@ -1,9 +1,10 @@
 class Bullet {
-  constructor(ctx, x, y) {
+  constructor(ctx, x, y, value) {
     this.ctx = ctx
     this.x = x
     this.y = y
-    this.vx = 15
+    this.vx = value
+   
     
     this.w = 4
     this.h = 4
@@ -35,6 +36,8 @@ class Bullet {
   move() {
     this.x += this.vx
   }
+
+
 
   isVisible() {
     return (this.x < this.ctx.canvas.width && this.x > 0 && this.y < this.ctx.canvas.height && this.y > 0)
