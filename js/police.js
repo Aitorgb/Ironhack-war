@@ -2,7 +2,7 @@ class Police {
     constructor(ctx) {
         this._ctx = ctx
 
-       
+
         this._img = new Image()
         this._img.src = './images/police.gif'
         this.x = 0
@@ -23,8 +23,9 @@ class Police {
         this.vy = 0
         this.g = 0
         this.life = 100
+        this.damage = 25
 
-       
+
         this.weapon = new Weapon(this)
     }
 
@@ -52,29 +53,30 @@ class Police {
         this.x += this.vx
         this.y += this.vy
         this.weapon.move()
-      
+
     }
 
 
     jump() {
-        if (this._floor()){
+        console.log(this.y);
+        // if (this._floor()){
             this.jump_position = this.y + this.height
-            this.vy = -5
+            this.vy += -5
             this.g = 0.1
             this.cutY === 0 ? this.cutY = 2 : this.cutY = 3
-        }
+        
         this._jumpstate = true
     }
 
 
 
     _floor() {
-        return this.y >= this._ctx.canvas.height * 0.50
+        return this.y + this.height >= this._ctx.canvas.height * 0.60
     }
 
 
     animate () {
-       
+
 
         this._img.frameIndex++
 
@@ -94,23 +96,22 @@ class Police {
             this.cutY = 0
         }
 
-        if (this.x >= this._ctx.canvas.width * 0.80) {
-            this.x = this._ctx.canvas.width * 0.80
-        } else if (this.x <= this._ctx.canvas.width * 0.10) {
-            this.x = this._ctx.canvas.width * 0.10
-        } else if (this.y + this.height >= this._ctx.canvas.height) {
-            this.y = this._ctx.canvas.height - this.height
-        } else if (this.y <= this._ctx.canvas.height * 0.50 ) {
-            this.y = this._ctx.canvas.height * 0.50
-        }
+    }
+    collisionUpper(element) {
+        const colY =  (this.y + this.height) > element.y + element.h * 0.10
+        return colY
+    }
 
+    collisionBg () {
+        const colX = (this.x  < 0) || this.x + this.width > this._ctx.canvas.width
+        const colY = (this.y  < 0) || (this.y + this.height) * 0.99 > this._ctx.canvas.height
+        return colX || colY
     }
 
 
     otherCollision(element) {
-        
-        const colX = this.x + this.width > element.x && this.x < element.x + element.w
-        const colY = this.y + this.height > element.y && this.y + (this.height * 0.85) < element.y + element.h
+        const colX = (this.x + this.width) * 0.98 > element.x && this.x < (element.x + element.w) * 0.98
+        const colY = (this.y + this.height) * 0.95 > element.y && this.y + this.height * 0.98 < (element.y + element.h)
         return colX && colY
 
     }

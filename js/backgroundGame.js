@@ -41,11 +41,9 @@ class BackgroundGame {
 
     move() {
         this.x += this.vx
-        if (this.x + this.v <= 0) {
-             this.x = 0
-        }else if (this.x > 0){
-            this.x = 0
-        }
+        this.x + this.v <= 0 && (this.x = 0)
+        this.x > 0 && (this.x = 0)
+    
 
     }
 

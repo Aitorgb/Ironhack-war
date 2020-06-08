@@ -10,13 +10,43 @@ body {
   height: 100vh;
 }
 
+#menu-final {
+  position: absolute;
+  left: 0;
+  top:18em;
+  right: 0;
+  margin: auto;
+  width: 1000px;
+  height: 500px;
+  background: url('../images/mission-failed.png') no-repeat;
+  background-size:cover;
+}
+
+#victory{
+  position: absolute;
+  left: 0;
+  top:18em;
+  right: 0;
+  margin: auto;
+  width: 1000px;
+  height: 500px;
+  background: url('../images/vitory.png') no-repeat;
+  background-size:cover;
+}
+
+.no-visible {
+  display: none;
+}
+.visible {
+  display: inline;
+}
+
 canvas {
   border: 2px solid black;
   margin-top: 18em;
-  display: none;
 }
 
-#menu {
+#menu-start{
   position: absolute;
   left: 0;
   top:18em;
@@ -27,6 +57,19 @@ canvas {
   background: url('../images/main-menu.png') no-repeat;
   background-size:cover;
 }
+
+#retry-button {
+  background: url('../images/btn-retry.png') no-repeat;
+  margin-top: 8%;
+  
+}
+#score-failed {
+  color: white;
+  font-size: 40px;
+  margin-top: 5.3em;
+ 
+}
+
 
 #play-button {
   background: url('../images/btn-play.png') no-repeat;
@@ -39,7 +82,7 @@ canvas {
 .button {
   margin-left: 38%;
   cursor: pointer;
-  height: 3.5em;
+  height: 4.5em;
 
 }
 

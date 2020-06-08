@@ -4,7 +4,6 @@ class ObstaclesFixed extends Obstacles {
         this.w = w
         this.h = h
         this.top = x
-        
     }
 
 
@@ -17,20 +16,6 @@ class ObstaclesFixed extends Obstacles {
             this.h
         )
     }
-
-
-    move() {
-        this.x += this.vx 
-        if (this.x > this.top) {
-            this.x = this.top
-        }
-    }
-
-    _numberRandomX() {
-        return Math.floor(Math.random() * this._ctx.canvas.height * 0.61)
-    }
-
-   
 
 
 }

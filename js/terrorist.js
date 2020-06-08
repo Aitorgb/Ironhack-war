@@ -25,7 +25,11 @@ class Terrorist {
         this.tick = 0
         this.vx = 1
         this.vy = 0
+        this.life = 100
+        this.damage = 25
 
+        this.near = false
+        this.direction = 'right'
        
         this.weapon = new Weapon(this)
     }
@@ -57,23 +61,38 @@ class Terrorist {
 
 
     animate () {
-        if(this.tick++ > 9) {
-        this._img.frameIndex++
-        this.tick = 0
+        if(!this.near) {
+            if(this.tick++ > 9) {
+                this._img.frameIndex++
+                this.tick = 0
+            }
+        
+            if (this._img.frameIndex >= this._img.frames) {
+                  this._img.frameIndex = 0
+            }
+        } else {
+            this._img.frameIndex = 0
         }
-
-        if (this._img.frameIndex >= this._img.frames) {
-          this._img.frameIndex = 0
-        }
+        
       }
+
+    isNear (police) {
+        const colX = (this.x + this._bg.x) - police.x  <= 400
+        const colY = police.y - this.y <= 30 && police.y - this.y >= -30
+
+            return colX && colY ? this.near = true : this.near = false
+    }
+
+    
 
 
     _checkCollision() {
-       
         if (this.x >= this.end) {
+            this.direction ='left'
             this.vx *= -1
             this.cutY = 1
         } else if ( this.x < this.start) {
+            this.direction = 'right'
             this.vx *= -1
             this.cutY = 0
         }

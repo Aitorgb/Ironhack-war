@@ -8,4 +8,8 @@ class Obstacles {
        
     }
 
+    move() {
+        this.x += this.vx
+    }
+
 }

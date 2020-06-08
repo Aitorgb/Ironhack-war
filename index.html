@@ -9,14 +9,23 @@
   </head>
   <body>
     <div id="game-board">
-    <div id="menu">
+    <div id="menu-start" class="menu">
       <div class="button" id="play-button"></div>
       <div class='button' id="setting-button"></div>
     </div>
-      <canvas id="canvas" width="1000" height="500"></canvas>
+      <canvas id="canvas" class="no-visible" width="1000" height="500"></canvas>
+      <div id="menu-final" class="no-visible">
+        <div id="score-failed">0</div>
+        <div class="button" id="retry-button"></div>
+      </div>
+      <div id="victory" class="no-visible">
+        <div id="score-final">0</div>
+        <div class="button" id="menu-button"></div>
+      </div>
     </div>
-
+    <script type="text/javascript" src="js/score.js"></script>
     <script type="text/javascript" src="js/obstacles.js"></script>
+    <script type="text/javascript" src="js/rewards.js"></script>
     <script type="text/javascript" src="js/obstaclesFixed.js"></script>
     <script type="text/javascript" src="js/obstaclesRandom.js"></script>
     <script type="text/javascript" src="js/terrorist.js"></script>
