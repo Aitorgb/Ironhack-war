@@ -5,7 +5,12 @@ class Police {
 
         this._img = new Image()
         this._img.src = './images/police.gif'
-        this.x = 0
+
+        this._imglife = new Image()
+        this._imglife.src = './images/heart.png'
+
+
+        this.x = 15
         this.y = this._ctx.canvas.height * 0.75
         this.width = 70
         this.height = 110
@@ -18,12 +23,14 @@ class Police {
 
         this.tick = 0
         this.jump_position = this._ctx.canvas.height
-        this._jumpstate = false
+        this.jumpstate = false
         this.vx = 0
         this.vy = 0
         this.g = 0
         this.life = 100
-        this.damage = 25
+        this.damage = 20
+
+        this.collisionObjectFloor = true
 
 
         this.weapon = new Weapon(this)
@@ -32,7 +39,6 @@ class Police {
 
 
     draw() {
-
         this._ctx.drawImage(
             this._img,
             this._img.frameIndex * this._img.width / this._img.frames,
@@ -46,6 +52,21 @@ class Police {
         )
         this.weapon.draw()
         this._checkCollision()
+        const lifeNow = this._calculateLife()
+        let j = 10
+        console.log(this.life);
+
+        for (let i = 0; i < lifeNow; i++ , j += 35) {
+            this._ctx.drawImage(
+                this._imglife,
+                this._ctx.canvas.width * 0.03 + j,
+                this._ctx.canvas.height * 0.03,
+                30,
+                30
+            )
+        }
+        
+    
     }
 
     move() {
@@ -56,30 +77,44 @@ class Police {
 
     }
 
+    _calculateLife() {
+        let n = 0
+        if (this.life < 25){
+            n = 1
+        } else if (this.life >= 25 && this.life < 50){
+            n = 2
+        } else if (this.life >= 50 && this.life < 75) {
+            n = 3
+        } else {
+            n = 4
+        }
+
+
+        return n
+    }
+
 
     jump() {
-        console.log(this.y);
-        // if (this._floor()){
+        console.log(this._floor());
+         if (this._floor()){
             this.jump_position = this.y + this.height
             this.vy += -5
             this.g = 0.1
             this.cutY === 0 ? this.cutY = 2 : this.cutY = 3
-        
-        this._jumpstate = true
+            this.jumpstate = true
+            this._img.frameIndex = 4
+         }
     }
 
 
 
     _floor() {
-        return this.y + this.height >= this._ctx.canvas.height * 0.60
+        return (this.y >= this._ctx.canvas.height * 0.50) && this.collisionObjectFloor
     }
 
 
     animate () {
-
-
         this._img.frameIndex++
-
         if (this._img.frameIndex >= this._img.frames) {
           this._img.frameIndex = 0
         }
@@ -89,10 +124,10 @@ class Police {
     _checkCollision() {
 
 
-        if (this._jumpstate && this.jump_position < this.y + this.height) {
+        if (this.jumpstate && this.jump_position < this.y + this.height) {
             this.y = this.jump_position - this.height
             this.vy = this.g = 0
-            this._jumpstate = false
+            this.jumpstate = false
             this.cutY = 0
         }
 
@@ -103,15 +138,15 @@ class Police {
     }
 
     collisionBg () {
-        const colX = (this.x  < 0) || this.x + this.width > this._ctx.canvas.width
-        const colY = (this.y  < 0) || (this.y + this.height) * 0.99 > this._ctx.canvas.height
+        const colX = (this.x  < 10) || this.x + this.width > this._ctx.canvas.width
+        const colY = (this.y  < this._ctx.canvas.height * 0.50) || (this.y + this.height) * 0.99 > this._ctx.canvas.height
         return colX || colY
     }
 
 
     otherCollision(element) {
-        const colX = (this.x + this.width) * 0.98 > element.x && this.x < (element.x + element.w) * 0.98
-        const colY = (this.y + this.height) * 0.95 > element.y && this.y + this.height * 0.98 < (element.y + element.h)
+        const colX = (this.x + this.width) * 0.98 > element.x && this.x < (element.x + element.width) * 0.98
+        const colY = (this.y + this.height) * 0.95 > element.y && this.y + this.height * 0.98 < (element.y + element.height)
         return colX && colY
 
     }

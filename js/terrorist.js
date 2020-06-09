@@ -1,5 +1,5 @@
 class Terrorist {
-    constructor(ctx, x, y, bg) {
+    constructor(ctx, x, y, bg, start) {
         this._ctx = ctx
 
        
@@ -13,8 +13,8 @@ class Terrorist {
 
         this._bg = bg
 
-        this.start = this.x
-        this.end = this.x + 500
+        this.start = start
+        this.end = start + 500
 
         this._img.frames = 6
         this._img.frameIndex = 0
@@ -26,7 +26,7 @@ class Terrorist {
         this.vx = 1
         this.vy = 0
         this.life = 100
-        this.damage = 25
+        this.damage = 20
 
         this.near = false
         this.direction = 'right'

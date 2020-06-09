@@ -30,9 +30,8 @@ class Score {
         document.getElementById('menu-final').className = 'visible'
     }
 
-    final() {
-
-
+    final(rewards) {
+    
 
     }
 

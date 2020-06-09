@@ -9,14 +9,17 @@
   </head>
   <body>
     <div id="game-board">
-    <div id="menu-start" class="menu">
+    <div id="menu-start" class="menu no-visible">
       <div class="button" id="play-button"></div>
       <div class='button' id="setting-button"></div>
     </div>
+      <div id="loading" class="no-visible">
+        <progress id="loading-bar" max="100" value="0" ></progress>
+      </div>
       <canvas id="canvas" class="no-visible" width="1000" height="500"></canvas>
-      <div id="menu-final" class="no-visible">
+      <div id="menu-final" class="">
         <div id="score-failed">0</div>
-        <div class="button" id="retry-button"></div>
+        <div id="retry-button"></div>
       </div>
       <div id="victory" class="no-visible">
         <div id="score-final">0</div>

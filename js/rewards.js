@@ -1,5 +1,5 @@
 class Rewards {
-    constructor(ctx, x, y, number) {
+    constructor(ctx, x, y, number, w = 50, h = 50) {
         this._ctx = ctx
         this.x = x
         this.y = y
@@ -10,8 +10,8 @@ class Rewards {
         this.img.src = './images/reward.gif'
         this.img.frames = 7
         this.img.frameIndex = number
-        this.w = 50
-        this.h = 50     
+        this.width = w
+        this.height = h   
     }
 
     draw() {
@@ -24,8 +24,8 @@ class Rewards {
             this.img.height,
             this.x,
             this.y,
-            this.w,
-            this.h
+            this.width,
+            this.height
         )
     }
 

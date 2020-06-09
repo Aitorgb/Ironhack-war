@@ -9,12 +9,10 @@ class Game {
         this.tick = 0
         this._obstacles = []
         this._terrorist = []
-        this._rewards  = []
+        this.rewards  = []
         this.lastBg = true;
         this._setListener()
-        this._addObstacle()
-        this._addterrorist()
-        this._addreward()
+        this._createInit()
         this.countShoot = 49
         this.score = 0
     }
@@ -24,10 +22,9 @@ class Game {
             this._clear()
             this._draw()
             this._move()
-           this._collision()
-           this._shoot()
-           this.createObstacles()
-
+            this._collision()
+            this._shoot()
+            this._createTerrorist()
         }, 1000 / 60);
     }
 
@@ -47,7 +44,7 @@ class Game {
             obstacle.draw()
         })
         
-        this._rewards.forEach(rewards => {
+        this.rewards.forEach(rewards => {
             rewards.draw()
         })
         this._score.draw(this.score)
@@ -71,84 +68,31 @@ class Game {
         this._terrorist.forEach(terrorist => {
             terrorist.move()
         })
-        this._rewards.forEach(reward => {
+        this.rewards.forEach(reward => {
             reward.move()
         })
     }
 
-    _addObstacle() {
-        this._obstacles = [
-            new ObstaclesFixed (this._ctx, 0, 200, 20, 190),
-            new ObstaclesFixed (this._ctx, 100, 210, 190, 110),
-            new ObstaclesFixed (this._ctx, 190, 0, 300, 400),
-            new ObstaclesFixed (this._ctx, 490, 0, 140, 370),
-            new ObstaclesFixed (this._ctx, 620, 0, 180, 400),
-            new ObstaclesFixed (this._ctx, 1600, 310, 70,70),
-            new ObstaclesFixed (this._ctx, 1560, 320, 50, 50),
-            new ObstaclesFixed (this._ctx, 1670, 230, 200, 150),
-            new ObstaclesFixed (this._ctx, 1800, 200, 210, 190),
-            new ObstaclesFixed (this._ctx, 2000, 200, 20, 190),
-            new ObstaclesFixed (this._ctx, 2100, 210, 190, 110),
-            new ObstaclesFixed (this._ctx, 2200, 0, 300, 400),
-            new ObstaclesFixed (this._ctx, 2450, 0, 170, 370),
-            new ObstaclesFixed (this._ctx, 2620, 0, 180, 400),
-            new ObstaclesRandom (this._ctx, 500, 400, 0),
-            new ObstaclesRandom (this._ctx, 900, 300, 1),
-            new ObstaclesRandom (this._ctx, 1200, 380, 0),
-            new ObstaclesRandom (this._ctx, 1800, 400, 1, 1, 2),
-            new ObstaclesRandom (this._ctx, 2508, 400, 0)
-        ]
-        
+    _createInit() {
+        this._addObstacle()
+        this._addObstacle(this._bg.v)
+        this._addreward()
+        this._addterrorist()
+        this._addreward(this._bg.v)
     }
 
-    _addreward() {
-        let numberImg = 3
-        for (let j = 0; j <= 500; j += 500) {
-            for (let i = 0; i < 300; i += 90) {
-                this._rewards.push (new Rewards(this._ctx, j + i + 150, 420, numberImg))
-            }
-            numberImg++
-        }
-        numberImg = 0
-            for (let i = 0; i <= 600; i += 90) {
-                this._rewards.push (new Rewards(this._ctx, i + 1250, 400, numberImg))
-                numberImg++
-                if (numberImg >= 3) numberImg = 0
-            }
-            for (let i = 0; i < 400; i += 100) {
-                this._rewards.push (new Rewards(this._ctx, i + 1150, 330, 3))
-            }
-        numberImg = 1
-            this._rewards.push (new Rewards(this._ctx, 1620, 250, numberImg))
-            this._rewards.push (new Rewards(this._ctx, 1670, 215, numberImg))
-            this._rewards.push (new Rewards(this._ctx, 1710, 190, numberImg))
-            
-            for (let i = 0; i < 100; i += 50) {
-                this._rewards.push (new Rewards(this._ctx, i + 1750, 180, numberImg))    
-            }
-            this._rewards.push (new Rewards(this._ctx, 1850, 155, 5))
-            if(!this.lastBg) {
-                this._rewards.push (new Rewards(this._ctx, 1950, 155, 6))
-            }        
-    }
-
-
-    createObstacles() {
-
-        if (this._bg.x === 0 && this._police.x > 100 && this.lastBg) {
+    _createTerrorist() {
+        if (this._bg.x === 0 && this._police.x > 500 && this.lastBg) {
             this.lastBg = false
-            this._addObstacle()
             this._addterrorist()
-            this._addreward()
-            
         }
     }
 
     _collision() {
-        
         const isCollision = this._obstacles.some (obstacle => {
             return this._police.otherCollision(obstacle)
         });
+        isCollision ? this._police.collisionObjectFloor = false : this._police.collisionObjectFloor = true
          
         const isCollisionBackground = this._obstacles.some (obstacle => {
             return this._police.collisionBg()
@@ -157,8 +101,9 @@ class Game {
         const isCollisionUpper = this._obstacles.some (obstacle => {
             return this._police.collisionUpper(obstacle)
         });
-
-        this._rewards.forEach (reward => {
+       
+        const newBgCollision = this._bg.x > 0
+        this.rewards.forEach (reward => {
             if (this._police.otherCollision(reward)) {
                 const resul = reward.sumRewards()
                 if (!isNaN(resul)) {
@@ -166,34 +111,34 @@ class Game {
                 } else if (resul === 'life') {
                     this._police.life = 100
                 } else if (resul === 'final') {
-                    this._score.final()
+                    this._score.final(this.rewards)
                 }
-                this._rewards = this._rewards.filter (rewardCollision => rewardCollision !== reward)
+                this.rewards = this.rewards.filter (rewardCollision => rewardCollision !== reward)
             }
         });
-           if (isCollision || isCollisionBackground) {
 
-                // this._obstacles.forEach( obstacle => {
-                //     if (this._police.collisionUpper(obstacle)) {
-                //         this._police.y = obstacle.y
-                //     }
-
-                    
-                // });
-
-
-
-            // if (isCollisionUpper) {
-            //     this._police.y -= this._police.vy
-            //     console.log('hei');
-            // } else {
+        if ((isCollision || isCollisionBackground ) && !this._police.jumpstate) {
                 this._police.x -= this._police.vx
                 this._police.y -= this._police.vy
                 this._bg.x -= this._bg.vx
                 this._obstacles.forEach (obstacle => {
                     obstacle.x -= obstacle.vx
                 })
-                this._rewards.forEach (reward => {
+                this.rewards.forEach (reward => {
+                    reward.x -= reward.vx
+                })
+           }
+
+           if (newBgCollision) {
+            if (this._police.x < 15) {
+                this._police.x -= this._police.vx
+                this._police.y -= this._police.vy
+            }
+                this._bg.x -= this._bg.vx
+                this._obstacles.forEach (obstacle => {
+                    obstacle.x -= obstacle.vx
+                })
+                this.rewards.forEach (reward => {
                     reward.x -= reward.vx
                 })
            }
@@ -203,24 +148,17 @@ class Game {
 
     }
 
-    _addterrorist() {
-        this._terrorist = [ new Terrorist(
-            this._ctx,
-            this._ctx.canvas.width,
-            this._ctx.canvas.height * 0.57,
-            this._bg
-             ),
-            new Terrorist(
-                this._ctx,
-                this._ctx.canvas.width + 200,
-                this._ctx.canvas.height * 0.7,
-                this._bg
-             )
-            ]
-    }
+    
 
 
     _shoot() {
+
+        this._obstacles.forEach(obstacle => this._police.weapon.collide(obstacle))
+        this._obstacles.forEach(obstacle => {
+            this._terrorist.forEach(terrorist => terrorist.weapon.collide(obstacle))            
+        })
+
+    
         this._terrorist.forEach (terrorist => {
             const isCollisionBullet = this._police.weapon.collide(terrorist);
             if (isCollisionBullet) this.score += 500
@@ -244,10 +182,7 @@ class Game {
 
         this._terrorist.forEach(terrorist => terrorist.weapon.collide(this._police))
         this._terrorist = this._terrorist.filter (terrorist => terrorist.life > 0)
-
         this._police.life <= 0 && this._gameover()
-
-        
     }
     
 
@@ -266,7 +201,7 @@ class Game {
                         this._obstacles.forEach (obstacle => {
                             obstacle.vx = -2
                         })
-                        this._rewards.forEach (reward => {
+                        this.rewards.forEach (reward => {
                             reward.vx = -2
                         })
                         this._police.animate()
@@ -278,7 +213,7 @@ class Game {
                         this._obstacles.forEach (obstacle => {
                             obstacle.vx = 2
                         })
-                        this._rewards.forEach (reward => {
+                        this.rewards.forEach (reward => {
                             reward.vx = 2
                         })
                         this._police.animate()
@@ -309,7 +244,7 @@ class Game {
                             this._obstacles.forEach (obstacle => {
                                 obstacle.vx = 0
                             })
-                            this._rewards.forEach (reward => {
+                            this.rewards.forEach (reward => {
                                 reward.vx = 0
                             })
                             break;
@@ -319,7 +254,7 @@ class Game {
                             this._obstacles.forEach (obstacle => {
                                 obstacle.vx = 0
                             })
-                            this._rewards.forEach (reward => {
+                            this.rewards.forEach (reward => {
                                 reward.vx = 0
                             })
                             break;
@@ -329,12 +264,85 @@ class Game {
                         case DOWN_BUTTON:
                             this._police.vy = 0
                             break;
-                        case SPACE:
-                        this._police.vy += this._police.jump_position
-                        this._police.g = 0
-                        break;
                     }
             })
+    }
+
+
+    _addterrorist() {
+        this._terrorist = [ new Terrorist(
+            this._ctx,
+            this._ctx.canvas.width,
+            this._ctx.canvas.height * 0.57,
+            this._bg,
+            1000
+             ),
+             new Terrorist(
+                this._ctx,
+                this._ctx.canvas.width + 500,
+                this._ctx.canvas.height * 0.8,
+                this._bg,
+                1200
+             )
+        ]
+            
+    }
+
+    _addObstacle(position = 0) {
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 0, 200, 20, 190))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 100, 210, 190, 110))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 190, 0, 300, 400))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 490, 0, 140, 370))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 620, 0, 180, 400))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1600, 310, 70,70))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1560, 320, 50, 50))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1560, 320, 50, 50))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1670, 230, 200, 150))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1800, 200, 210, 190))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 2000, 200, 20, 190))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 2100, 210, 190, 110))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 2200, 0, 300, 400))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 2450, 0, 170, 370))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 2620, 0, 180, 400))
+        this._obstacles.push(new ObstaclesRandom (this._ctx, position + 500, 400, 0))
+        this._obstacles.push(new ObstaclesRandom (this._ctx, position + 900, 300, 1))
+        this._obstacles.push(new ObstaclesRandom (this._ctx, position + 1100, 400, 0))
+        this._obstacles.push(new ObstaclesRandom (this._ctx, position + 1800, 400, 1, 1, 2))
+        this._obstacles.push(new ObstaclesRandom (this._ctx, position + 2508, 400, 0))
+    }
+
+    _addreward(position = 0) {
+        let numberImg = 3
+        for (let j = 0; j <= 500; j += 500) {
+            for (let i = 0; i < 300; i += 90) {
+                this.rewards.push (new Rewards(this._ctx, position + j + i + 150, 420, numberImg))
+            }
+            numberImg++
+        }
+        numberImg = 0
+            for (let i = 0; i <= 600; i += 90) {
+                this.rewards.push (new Rewards(this._ctx, position + i + 1250, 400, numberImg))
+                numberImg++
+                if (numberImg >= 3) numberImg = 0
+            }
+            for (let i = 0; i < 400; i += 100) {
+                this.rewards.push (new Rewards(this._ctx, position + i + 1150, 330, 3))
+            }
+        numberImg = 1
+            this.rewards.push (new Rewards(this._ctx, position + 1620, 250, numberImg))
+            this.rewards.push (new Rewards(this._ctx, position + 1670, 215, numberImg))
+            this.rewards.push (new Rewards(this._ctx, position + 1710, 190, numberImg))
+            
+            for (let i = 0; i < 100; i += 50) {
+                this.rewards.push (new Rewards(this._ctx, position + i + 1750, 180, numberImg))    
+            }
+                       
+            if(position != 0) {
+                this.rewards.push (new Rewards(this._ctx, position + 1850, 105, 6, 100, 100))
+                this.lastBg = true
+            }else {
+                this.rewards.push (new Rewards(this._ctx, position + 1850, 155, 5))
+            }     
     }
 
 

@@ -8,13 +8,29 @@ window.onload = () => {
     const menuVictory = document.getElementById('victory')
     const mainButton =  document.getElementById('menu-button')
     const ctx = canvas.getContext('2d')
+    const loadingBar = document.getElementById('loading-bar')
+    const loading = document.getElementById('loading')
 
     buttonPlay.addEventListener('click', () => {
         menuFinal.className = 'no-visible'
         menu.className = 'no-visible'
-        canvas.className = 'inline'
+        loading.className = 'visible'
         const game = new Game(ctx)
         game.start()
+        let load = 0
+        
+
+        const loadingIntervalId = setInterval(() => {
+            loadingBar.setAttribute('value', load)
+            load++
+        }, 10);
+        
+       setTimeout(() => {
+            clearInterval(loadingIntervalId)
+            loading.className = 'no-visible'
+            canvas.className = 'inline'
+        }, 1500);
+        
     })
     
     buttonSetting.addEventListener('click', () => {

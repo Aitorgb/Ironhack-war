@@ -5,8 +5,8 @@ class ObstaclesRandom extends Obstacles{
         this._img.src = './images/obstacles.gif'
         this._img.frames = frames
         this._img.frameIndex = number
-        this.w = 150
-        this.h = 100
+        this.width = 150
+        this.height = 100
         this._img.rows = 2
         this.currentIndex = 0
         this.cutY = cutY
@@ -22,8 +22,8 @@ class ObstaclesRandom extends Obstacles{
                 this._img.height / this._img.rows,
                 this.x,
                 this.y,
-                this.w,
-                this.h
+                this.width,
+                this.height
             )
         
     }
