@@ -2,8 +2,8 @@ body {
   padding: 0;
   margin: 0;
   text-align: center;
-  counter-reset: loading;
 }
+
 
 #game-board {
   background: url('../images/background.jpg') no-repeat center center;
@@ -11,28 +11,24 @@ body {
   height: 100vh;
 }
 
-#menu-final {
+.menu {
   position: absolute;
   left: 0;
   top:18em;
   right: 0;
   margin: auto;
   width: 1000px;
-  height: 500px;
+  height: 64vh;
+}
+
+#menu-final {
   background: url('../images/mission-failed.png') no-repeat;
-  background-size:cover;
+  background-size:contain;
 }
 
 #victory{
-  position: absolute;
-  left: 0;
-  top:18em;
-  right: 0;
-  margin: auto;
-  width: 1000px;
-  height: 500px;
   background: url('../images/vitory.png') no-repeat;
-  background-size:cover;
+  background-size:contain;
 }
 
 .no-visible {
@@ -48,15 +44,12 @@ canvas {
 }
 
 #menu-start{
-  position: absolute;
-  left: 0;
-  top:18em;
-  right: 0;
-  margin: auto;
-  width: 1000px;
-  height: 500px;
   background: url('../images/main-menu.png') no-repeat;
-  background-size:cover;
+  background-size:contain;
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+  justify-content: center;
 }
 
 #retry-button {
@@ -64,27 +57,21 @@ canvas {
   margin: 4em auto;
   width: 10em;
   height: 4.5em;
+  cursor: pointer;
   
 }
-#score-failed {
+.score {
   color: white;
   font-size: 40px;
   margin-top: 5.3em;
 }
 
 #loading {
-  position: absolute;
-  left: 0;
-  top:18em;
-  right: 0;
-  margin: auto;
-  width: 1000px;
-  height: 500px;
   background: url('../images/background-loading.png') no-repeat;
   background-size: cover;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
 }
 
 
@@ -97,21 +84,123 @@ progress[value]{
   appearance: none;
   background: url('../images/loading-bar.png') no-repeat;
   color: #EFB810;
+  border: solid 2px #EFB810;
+  margin-bottom: 1em;
+  padding: 2px;
+  width: 80%;
+}
+#how-to-play {
+  box-sizing: border-box;
+  padding: 11em 2em 3em;
+  background: url('../images/how-to-play.png') no-repeat;
+  background-size:contain;
+  display: flex;
+    align-items: center;
+    justify-content: center;
+    height: inherit;
+}
+#how-to-play > div {
+  width: 50%;
+  border: 1px solid black;
+  background-color: black;
+}
+#how-to-play > img {
+  margin-left: 30px;
+  float: right;
+  width: 42%;
+}
+
+#levels-menu {
+  background: url('../images/level-menu.png') no-repeat;
+  background-size:contain;
+  height: inherit;
+  display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#levels-menu div{
+  background-size: contain;
+  width: 7em;
+}
+#level-one {
+  background: url('../images/1.png') no-repeat;
+}
+#level-two {
+  background: url('../images/2.png') no-repeat;
+}
+#level-three {
+  background: url('../images/3.png') no-repeat;
+}
+
+.indicationGame {
+  padding: .6em 3em;
+  border-bottom: solid 2px grey;
+  color: #f4f4f4;
+  display: flex;
+  align-items:center;
+  justify-content: space-between;
+}
+
+.indicationGame:last-child{
+  border-bottom:0
+}
+.letter {
+  border: 1px solid black;
+  box-shadow: .5px .5px 2px;
+  padding: 4px;
+  float: right;
+}
+
+#arrow-back {
+  transform: rotate(180deg);
+}
+#arrow-up {
+  transform: rotate(-90deg);
+}
+#arrow-bottom {
+  transform: rotate(90deg);
+}
+
+#back-button {
+  background: url('../images/button-back.png') no-repeat;
+  position: absolute;
+  right: 3em;
+  bottom: 3em;
+  width: 12.8em !important;
+  height: 4em;
+    
+}
+#level-button {
+  background: url('../images/btn-levels.png') no-repeat;
 }
 
 
 #play-button {
   background: url('../images/btn-play.png') no-repeat;
-  margin-top: 25%;
+  margin-top: 8em;
 }
 
 #setting-button {
-  background: url('../images/btn-setting.png') no-repeat;
+  background: url('../images/btn-how-to-play.png') no-repeat;
 }
-.button {
-  margin-left: 38%;
-  cursor: pointer;
-  height: 4.5em;
 
+#menu-button {
+  background: url('../images/button-menu.png') no-repeat;
+}
+
+#next-level {
+  background: url('../images/button-next-level.png') no-repeat;
+}
+
+#menu-button, #next-level {
+  margin: 5em auto -5em;
+}
+
+
+.button {
+  width: 13em;
+  cursor: url(../images/objetivo.png), pointer;
+  height: 4.5em;
 }
 

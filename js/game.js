@@ -1,21 +1,35 @@
 class Game {
-    constructor (ctx) {
+    constructor (ctx, number = 0) {
         this._ctx = ctx
         this._idInterval = null
         this._bg = new BackgroundGame (ctx)
         this._police = new Police (ctx)
         this._score = new Score (ctx)
+       
         this.frameNumber = 0
         this.tick = 0
         this._obstacles = []
         this._terrorist = []
+        this._bombs = []
         this.rewards  = []
         this.lastBg = true;
+        this.lastCollisionBackground = false;
         this._setListener()
-        this._createInit()
+        
         this.countShoot = 49
-        this.score = 0
+        this.score = -5
+        this.audioGame = new Audio('./sound/principal.mp3')
+        this.audioGame.volume = 0.3
+        this.audioGame.loop = true
+        
+        this._levels = new Levels (this)
+        this.levelsNumber = number
+        this.intervalBoomTime = 3000
+
+        this._preload()
     }
+
+   
 
     start() {
         this._idInterval = setInterval(() => {
@@ -39,7 +53,6 @@ class Game {
 
     _draw() {
         this._bg.draw()
-        
         this._obstacles.forEach(obstacle => {
             obstacle.draw()
         })
@@ -47,11 +60,15 @@ class Game {
         this.rewards.forEach(rewards => {
             rewards.draw()
         })
+        this._bombs.forEach(bomb => {
+            bomb.draw()
+        })
         this._score.draw(this.score)
         this._police.draw()
         this._terrorist.forEach(terrorist => {
             terrorist.draw()
         })
+       
 
         if (this.tick++ > 10) {
             this.score++
@@ -71,9 +88,14 @@ class Game {
         this.rewards.forEach(reward => {
             reward.move()
         })
+        this._bombs.forEach(bomb => {
+            bomb.move()
+        })
     }
 
-    _createInit() {
+    _preload() {
+        this.audioGame.play()
+        this._numberLevels()
         this._addObstacle()
         this._addObstacle(this._bg.v)
         this._addreward()
@@ -81,10 +103,19 @@ class Game {
         this._addreward(this._bg.v)
     }
 
+    _numberLevels() {
+        if (this.levelsNumber === 2) {
+            this._levels.secondLevel()
+        } else if (this.levelsNumber === 3) {
+            this._levels.thirdLevel()
+        }
+    }
+
     _createTerrorist() {
         if (this._bg.x === 0 && this._police.x > 500 && this.lastBg) {
             this.lastBg = false
             this._addterrorist()
+            this.lastCollisionBackground = true;
         }
     }
 
@@ -97,12 +128,36 @@ class Game {
         const isCollisionBackground = this._obstacles.some (obstacle => {
             return this._police.collisionBg()
         });
-
-        const isCollisionUpper = this._obstacles.some (obstacle => {
+        const iscollisionUpper = this._obstacles.some (obstacle => {
             return this._police.collisionUpper(obstacle)
         });
-       
+
+        const obstaclesFixedCollision = this._obstacles.filter( obstacle => {
+            return obstacle instanceof ObstaclesFixed
+        })
+
+
+        // const elementCollision = obstaclesFixedCollision.filter(obstacle => {
+            
+        //     return this._police.collisionX(obstacle)
+        // })
+
+        const elementCollision = obstaclesFixedCollision.some(obstacle => {
+            
+            return this._police.collisionX(obstacle)
+        })
+
+
+        // console.log('collisionX', elementCollision);
+
         const newBgCollision = this._bg.x > 0
+        // console.log('jump', this._police.jumpstate);
+        // console.log('isCollision', isCollision);
+        // console.log('isCollisionUpper', iscollisionUpper);
+        
+        
+
+
         this.rewards.forEach (reward => {
             if (this._police.otherCollision(reward)) {
                 const resul = reward.sumRewards()
@@ -111,25 +166,14 @@ class Game {
                 } else if (resul === 'life') {
                     this._police.life = 100
                 } else if (resul === 'final') {
+                    this._stop()
                     this._score.final(this.rewards)
                 }
                 this.rewards = this.rewards.filter (rewardCollision => rewardCollision !== reward)
             }
         });
 
-        if ((isCollision || isCollisionBackground ) && !this._police.jumpstate) {
-                this._police.x -= this._police.vx
-                this._police.y -= this._police.vy
-                this._bg.x -= this._bg.vx
-                this._obstacles.forEach (obstacle => {
-                    obstacle.x -= obstacle.vx
-                })
-                this.rewards.forEach (reward => {
-                    reward.x -= reward.vx
-                })
-           }
-
-           if (newBgCollision) {
+        if (newBgCollision) {
             if (this._police.x < 15) {
                 this._police.x -= this._police.vx
                 this._police.y -= this._police.vy
@@ -141,10 +185,63 @@ class Game {
                 this.rewards.forEach (reward => {
                     reward.x -= reward.vx
                 })
-           }
-           
+            
+        }else if ((isCollision || isCollisionBackground ) && !this._police.jumpstate) {
 
-          
+                this._police.x -= this._police.vx
+                this._police.y -= this._police.vy
+                this._bg.x -= this._bg.vx
+                this._obstacles.forEach (obstacle => {
+                    obstacle.x -= obstacle.vx
+                })
+                this.rewards.forEach (reward => {
+                    reward.x -= reward.vx
+                })
+                this._bombs.forEach (bomb => {
+                    bomb.x -= bomb.vx
+                })
+
+               
+             
+        
+        } else if (this._police.jumpstate && iscollisionUpper && isCollision ) {
+                if(elementCollision) {
+                    this._police.x -= this._police.vx
+                    this._police.y -= this._police.vy
+                    this._police.vy -= this._police.g 
+                    this._bg.x -= this._bg.vx
+                    this._obstacles.forEach (obstacle => {
+                    obstacle.x -= obstacle.vx
+                    })
+                    this.rewards.forEach (reward => {
+                    reward.x -= reward.vx
+                    })
+
+                } else {
+                    this._police.y -= this._police.vy
+                    this._police.vy -= this._police.g 
+
+                }               
+        }
+        
+        const finalBackground = this._bg.v + this._bg.x + this._ctx.canvas.width === this._bg.v * 0.9
+
+        if(this.lastCollisionBackground && finalBackground){
+            this._bg.x -= this._bg.vx
+            this._obstacles.forEach (obstacle => {
+                obstacle.x -= obstacle.vx
+            })
+            this.rewards.forEach (reward => {
+                reward.x -= reward.vx
+            })
+        }
+
+
+        const isCollisionBombs = this._bombs.some (bomb => {
+            return this._police.otherCollision(bomb)
+        });
+
+        if(isCollisionBombs) this._police.life = 0
 
     }
 
@@ -195,6 +292,7 @@ class Game {
             document.addEventListener('keydown', event => {
                 switch(event.keyCode) {
                     case RIGHT_BUTTON:
+                        this._police.animate()
                         this._police.vx = 0.5
                         this._police.cutY = 0
                         this._bg.vx = -2
@@ -204,9 +302,12 @@ class Game {
                         this.rewards.forEach (reward => {
                             reward.vx = -2
                         })
-                        this._police.animate()
+                        this._bombs.forEach (bomb => {
+                            bomb.vx = -2
+                        })
                         break;
                     case LEFT_BUTTON:
+                        this._police.animate()
                         this._police.vx = -0.5
                         this._police.cutY = 1
                         this._bg.vx = 2
@@ -216,15 +317,17 @@ class Game {
                         this.rewards.forEach (reward => {
                             reward.vx = 2
                         })
-                        this._police.animate()
+                        this._bombs.forEach (bomb => {
+                            bomb.vx = 2
+                        })
                         break;
                     case UP_BUTTON:
-                        this._police.vy = -1;
                         this._police.animate()
+                        this._police.vy = -1;
                         break;
                     case DOWN_BUTTON:
-                        this._police.vy = 1;
                         this._police.animate()
+                        this._police.vy = 1;
                         break;
                     case SPACE:
                         this._police.jump()
@@ -247,6 +350,9 @@ class Game {
                             this.rewards.forEach (reward => {
                                 reward.vx = 0
                             })
+                            this._bombs.forEach (bomb => {
+                                bomb.vx = 0
+                            })
                             break;
                         case LEFT_BUTTON:
                             this._police.vx = 0
@@ -256,6 +362,9 @@ class Game {
                             })
                             this.rewards.forEach (reward => {
                                 reward.vx = 0
+                            })
+                            this._bombs.forEach (bomb => {
+                                bomb.vx = 0
                             })
                             break;
                         case UP_BUTTON:
@@ -288,22 +397,23 @@ class Game {
             
     }
 
+
+
+
+
     _addObstacle(position = 0) {
         this._obstacles.push(new ObstaclesFixed (this._ctx, position + 0, 200, 20, 190))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 100, 210, 190, 110))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 100, 0, 190, 310))
         this._obstacles.push(new ObstaclesFixed (this._ctx, position + 190, 0, 300, 400))
         this._obstacles.push(new ObstaclesFixed (this._ctx, position + 490, 0, 140, 370))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 620, 0, 180, 400))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1600, 310, 70,70))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 620, 0, 180, 400)) 
         this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1560, 320, 50, 50))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1560, 320, 50, 50))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1670, 230, 200, 150))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1800, 200, 210, 190))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 2000, 200, 20, 190))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 2100, 210, 190, 110))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 2200, 0, 300, 400))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 2450, 0, 170, 370))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 2620, 0, 180, 400))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1608, 310, 80,70))
+        
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1685, 230, 150, 150))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1835, 200, 163, 190))
+
+
         this._obstacles.push(new ObstaclesRandom (this._ctx, position + 500, 400, 0))
         this._obstacles.push(new ObstaclesRandom (this._ctx, position + 900, 300, 1))
         this._obstacles.push(new ObstaclesRandom (this._ctx, position + 1100, 400, 0))
@@ -345,10 +455,21 @@ class Game {
             }     
     }
 
+    _createbombs() {
+        this._bombs = [
+            new Bomb (this._ctx, this._numberRandom(), this._bg),
+            new Bomb (this._ctx, this._numberRandom(), this._bg),
+            new Bomb (this._ctx, this._numberRandom(), this._bg)
+        ]
+    }
 
+    _numberRandom() {
+        return Math.floor(Math.random() * (this._ctx.canvas.width - 20) + 20)
+    }
 
-
-
-
-
+    bombs() {
+        setInterval(() => {
+            this._createbombs()
+        }, this.intervalBoomTime);
+    }
 }

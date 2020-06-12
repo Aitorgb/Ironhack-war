@@ -11,7 +11,8 @@ class Rewards {
         this.img.frames = 7
         this.img.frameIndex = number
         this.width = w
-        this.height = h   
+        this.height = h 
+        this.audioRewards = new Audio('./sound/rewards.mp3')
     }
 
     draw() {
@@ -35,25 +36,26 @@ class Rewards {
     }
 
     sumRewards() {
+        this.audioRewards.load()
+        this.audioRewards.play()
 
         switch (this.img.frameIndex) {
-            case 1:
+            case 0:
                 this.sum = 100
-                break;
-            case 2:
-            case 4:
+            case 1:
+            case 3:
                 this.sum = 50
                 break;
-            case 3:
+            case 2:
                 this.sum = 150
                 break;
-            case 5:
+            case 4:
                 this.sum = 25
                 break;
-            case 6:
+            case 5:
                 this.sum = 'life'
                 break;
-            case 7:
+            case 6:
                 this.sum = 'final'
                 break;
         }

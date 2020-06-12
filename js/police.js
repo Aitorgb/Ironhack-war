@@ -32,7 +32,6 @@ class Police {
 
         this.collisionObjectFloor = true
 
-
         this.weapon = new Weapon(this)
     }
 
@@ -51,10 +50,9 @@ class Police {
             this.height
         )
         this.weapon.draw()
-        this._checkCollision()
+        this._checkJump()
         const lifeNow = this._calculateLife()
         let j = 10
-        console.log(this.life);
 
         for (let i = 0; i < lifeNow; i++ , j += 35) {
             this._ctx.drawImage(
@@ -74,7 +72,6 @@ class Police {
         this.x += this.vx
         this.y += this.vy
         this.weapon.move()
-
     }
 
     _calculateLife() {
@@ -88,28 +85,25 @@ class Police {
         } else {
             n = 4
         }
-
-
         return n
     }
 
 
     jump() {
-        console.log(this._floor());
-         if (this._floor()){
+            if  (this._floor()) {
             this.jump_position = this.y + this.height
-            this.vy += -5
+            }
+            this.vy = -5
             this.g = 0.1
             this.cutY === 0 ? this.cutY = 2 : this.cutY = 3
             this.jumpstate = true
             this._img.frameIndex = 4
-         }
     }
 
 
 
     _floor() {
-        return (this.y >= this._ctx.canvas.height * 0.50) && this.collisionObjectFloor
+        return (this.y >= this._ctx.canvas.height * 0.50) //&& this.collisionObjectFloor
     }
 
 
@@ -121,34 +115,46 @@ class Police {
       }
 
 
-    _checkCollision() {
+     _checkJump() {
 
 
-        if (this.jumpstate && this.jump_position < this.y + this.height) {
+        if (this.jump_position !== this._ctx.canvas.height && this.jump_position < this.y + this.height) {
             this.y = this.jump_position - this.height
             this.vy = this.g = 0
             this.jumpstate = false
             this.cutY = 0
-        }
+            this.jump_position = this._ctx.canvas.height
+        } 
 
     }
     collisionUpper(element) {
-        const colY =  (this.y + this.height) > element.y + element.h * 0.10
-        return colY
+        const colY =  (this.y + this.height) * 0.95 <= element.y + element.height * 0.2
+        const colX = this.x + this.width  > element.x && this.x < (element.x + element.width)
+        // console.log('police', this.y + this.height);
+        // console.log('y',  element.y);
+        // console.log('total', element.y + element.height  * 0.10 );
+        return colY && colX
+    }
+
+    collisionX(element) {
+        const colX = this.x + this.width > element.x && this.x + this.width < element.x + element.width * 0.05
+        return colX
     }
 
     collisionBg () {
         const colX = (this.x  < 10) || this.x + this.width > this._ctx.canvas.width
         const colY = (this.y  < this._ctx.canvas.height * 0.50) || (this.y + this.height) * 0.99 > this._ctx.canvas.height
         return colX || colY
+
+        //(this.y  < this._ctx.canvas.height * 0.50) || 
     }
 
 
     otherCollision(element) {
-        const colX = (this.x + this.width) * 0.98 > element.x && this.x < (element.x + element.width) * 0.98
+        const colX = (this.x + this.width) * 0.98 > element.x && this.x < (element.x + element.width)
+        //const colX = this.x + this.width  > element.x && this.x < (element.x + element.width)
         const colY = (this.y + this.height) * 0.95 > element.y && this.y + this.height * 0.98 < (element.y + element.height)
         return colX && colY
-
     }
 
 

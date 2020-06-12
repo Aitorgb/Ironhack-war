@@ -5,28 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="styles/style.css" />
-    <title>Ironhack Game</title>
+    <title>IronWar || Aitor</title>
   </head>
   <body>
     <div id="game-board">
-    <div id="menu-start" class="menu no-visible">
+    <div id="menu-start" class="menu">
       <div class="button" id="play-button"></div>
       <div class='button' id="setting-button"></div>
+      <div class='button' id="level-button"></div>
     </div>
-      <div id="loading" class="no-visible">
+      <div id="loading" class="menu no-visible">
         <progress id="loading-bar" max="100" value="0" ></progress>
       </div>
-      <canvas id="canvas" class="no-visible" width="1000" height="500"></canvas>
-      <div id="menu-final" class="">
-        <div id="score-failed">0</div>
-        <div id="retry-button"></div>
+      <div class="menu no-visible" id="options">
+          <div id="how-to-play" class="no-visible">
+            <div>
+            <div class="indicationGame"><span>Walk forward</span><span class="letter">&#10148;</span></div>
+            <div class="indicationGame"><span>Walk back</span><span class="letter" id="arrow-back">&#10148;</span></div>
+            <div class="indicationGame"><span>Walk left</span><span class="letter" id="arrow-up">&#10148;</span></div>
+            <div class="indicationGame"><span>Walk rigth</span><span class="letter" id="arrow-bottom">&#10148;</span></div>
+            <div class="indicationGame"><span>Jump</span><span class="letter">SPACE</span></div>
+            <div class="indicationGame"><span>Shoot</span><span class="letter">M</span></div>
+            </div>
+            <img src="./images/keyboard.png" alt="keyboard"/>
+          </div>
+          <div id="levels-menu" class="no-visible">
+            <div class="button" id="level-one"></div>
+            <div class='button' id="level-two"></div>
+            <div class='button' id="level-three"></div>
+          </div>
+        <div class="button" id="back-button"></div>
       </div>
-      <div id="victory" class="no-visible">
-        <div id="score-final">0</div>
+      <canvas id="canvas" class="no-visible" width="1000" height="500"></canvas>
+      <div id="menu-final" class="menu no-visible">
+        <div class="score" id="score-failed">0</div>
+        <div class="button" id="retry-button"></div>
+      </div>
+      <div id="victory" class="menu no-visible">
+        <div class="score" id="score-final">0</div>
         <div class="button" id="menu-button"></div>
+        <div class="button" id="next-level"></div>
       </div>
     </div>
+    <script type="text/javascript" src="js/levels.js"></script>
     <script type="text/javascript" src="js/score.js"></script>
+    <script type="text/javascript" src="js/bombs.js"></script>
     <script type="text/javascript" src="js/obstacles.js"></script>
     <script type="text/javascript" src="js/rewards.js"></script>
     <script type="text/javascript" src="js/obstaclesFixed.js"></script>

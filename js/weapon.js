@@ -5,10 +5,14 @@ class Weapon {
       this.direction = this.shooter.x + this.shooter.width
       this.value = 10
       this.bg = 5
+      this.audio = new Audio('./sound/boton.mp3')
     }
   
     shoot() {
-
+      this.audio.load()
+      this.audio.currentTime = 0.5
+      this.audio.play()
+     
       this.shooter.hasOwnProperty('_bg') ? this.bg = this.shooter._bg.x : this.bg = 0;
 
     if(this.shooter.cutY === 0 || this.shooter.cutY === 2) {
