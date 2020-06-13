@@ -1,7 +1,16 @@
+@font-face{
+  font-family: pressStart;
+  src: url('../PressStart2P-Regular.ttf');
+}
+
+
+
+
 body {
   padding: 0;
   margin: 0;
   text-align: center;
+  font-family: 'pressStart';
 }
 
 
@@ -37,6 +46,9 @@ body {
 .visible {
   display: inline;
 }
+.disable {
+  opacity: .4;
+}
 
 canvas {
   border: 2px solid black;
@@ -54,11 +66,7 @@ canvas {
 
 #retry-button {
   background: url('../images/btn-retry.png') no-repeat;
-  margin: 4em auto;
-  width: 10em;
-  height: 4.5em;
-  cursor: pointer;
-  
+  margin: 6em auto;
 }
 .score {
   color: white;
@@ -92,7 +100,7 @@ progress[value]{
 #how-to-play {
   box-sizing: border-box;
   padding: 11em 2em 3em;
-  background: url('../images/how-to-play.png') no-repeat;
+  background: url('../images/how-to-play.png') no-repeat center;
   background-size:contain;
   display: flex;
     align-items: center;
@@ -125,12 +133,15 @@ progress[value]{
 }
 #level-one {
   background: url('../images/1.png') no-repeat;
+  background-size: contain;
 }
 #level-two {
   background: url('../images/2.png') no-repeat;
+  background-size: contain;
 }
 #level-three {
   background: url('../images/3.png') no-repeat;
+  background-size: contain;
 }
 
 .indicationGame {
@@ -167,40 +178,55 @@ progress[value]{
   position: absolute;
   right: 3em;
   bottom: 3em;
-  width: 12.8em !important;
-  height: 4em;
-    
+  background-size:contain
 }
 #level-button {
   background: url('../images/btn-levels.png') no-repeat;
+  background-size:contain
+ 
+}
+
+.button-level {
+  width: 10vh;
+  height: 10vh;
+  margin-right: 10px;
 }
 
 
 #play-button {
   background: url('../images/btn-play.png') no-repeat;
   margin-top: 8em;
+  background-size:contain
 }
 
 #setting-button {
   background: url('../images/btn-how-to-play.png') no-repeat;
+  background-size:contain
 }
 
-#menu-button {
+.menu-button {
   background: url('../images/button-menu.png') no-repeat;
+  background-size:contain
 }
 
 #next-level {
   background: url('../images/button-next-level.png') no-repeat;
+  background-size:contain
 }
 
 #menu-button, #next-level {
-  margin: 5em auto -5em;
+  margin: 7em auto -5em;
+}
+
+button {
+  cursor: url(../images/objetivo.png), pointer;
 }
 
 
 .button {
-  width: 13em;
-  cursor: url(../images/objetivo.png), pointer;
-  height: 4.5em;
+  border:0;
+  width: 23vh;
+
+  height: 5em;
 }
 

@@ -94,7 +94,7 @@ class Game {
     }
 
     _preload() {
-        this.audioGame.play()
+        //this.audioGame.play()
         this._numberLevels()
         this._addObstacle()
         this._addObstacle(this._bg.v)
@@ -120,21 +120,44 @@ class Game {
     }
 
     _collision() {
-        const isCollision = this._obstacles.some (obstacle => {
-            return this._police.otherCollision(obstacle)
-        });
-        isCollision ? this._police.collisionObjectFloor = false : this._police.collisionObjectFloor = true
-         
+
         const isCollisionBackground = this._obstacles.some (obstacle => {
             return this._police.collisionBg()
         });
-        const iscollisionUpper = this._obstacles.some (obstacle => {
-            return this._police.collisionUpper(obstacle)
-        });
+        // const isCollision = this._obstacles.some (obstacle => {
+        //     return this._police.otherCollision(obstacle)
+        // });
+        // console.log(isCollision);
+        //isCollision ? this._police.collisionObjectFloor = false : this._police.collisionObjectFloor = true
+         
+        
 
+        const obstaclesRandomCollision = this._obstacles.filter( obstacle => {
+            return obstacle instanceof ObstaclesRandom
+        })
         const obstaclesFixedCollision = this._obstacles.filter( obstacle => {
             return obstacle instanceof ObstaclesFixed
         })
+       
+
+        const isCollisionFixed = obstaclesFixedCollision.some (obstacle => {
+                return this._police.otherCollision(obstacle)
+            });
+        const isCollisionRandom = obstaclesRandomCollision.some (obstacle => {
+                return this._police.otherCollision(obstacle)
+            });
+
+        isCollisionFixed ? this._police.collisionObjectFloor = false : this._police.collisionObjectFloor = true
+        
+
+        const iscollisionUpperFixed = obstaclesFixedCollision.some (obstacle => {
+            return this._police.collisionUpper (obstacle)
+        });
+        iscollisionUpperFixed ? this._police.collisionJumpUpper = true : this._police.collisionJumpUpper = false
+
+        const iscollisionUpperRandom = obstaclesRandomCollision.some (obstacle => {
+            return this._police.collisionUpper(obstacle)
+        });
 
 
         // const elementCollision = obstaclesFixedCollision.filter(obstacle => {
@@ -143,7 +166,6 @@ class Game {
         // })
 
         const elementCollision = obstaclesFixedCollision.some(obstacle => {
-            
             return this._police.collisionX(obstacle)
         })
 
@@ -151,27 +173,16 @@ class Game {
         // console.log('collisionX', elementCollision);
 
         const newBgCollision = this._bg.x > 0
-        // console.log('jump', this._police.jumpstate);
-        // console.log('isCollision', isCollision);
-        // console.log('isCollisionUpper', iscollisionUpper);
+        console.log('jump', this._police.jumpstate);
+        console.log('isCollision', isCollisionFixed);
+        console.log('isCollisionUpper', iscollisionUpperFixed);
         
-        
+        const fixedJump = this._police.jumpstate && iscollisionUpperFixed && isCollisionFixed
+        const randomJump = this._police.jumpstate && iscollisionUpperRandom && isCollisionRandom
 
-
-        this.rewards.forEach (reward => {
-            if (this._police.otherCollision(reward)) {
-                const resul = reward.sumRewards()
-                if (!isNaN(resul)) {
-                    this.score += resul
-                } else if (resul === 'life') {
-                    this._police.life = 100
-                } else if (resul === 'final') {
-                    this._stop()
-                    this._score.final(this.rewards)
-                }
-                this.rewards = this.rewards.filter (rewardCollision => rewardCollision !== reward)
-            }
-        });
+        console.log('fixed',fixedJump);
+        console.log('random', randomJump);
+   
 
         if (newBgCollision) {
             if (this._police.x < 15) {
@@ -185,8 +196,11 @@ class Game {
                 this.rewards.forEach (reward => {
                     reward.x -= reward.vx
                 })
+                this._bombs.forEach (bomb => {
+                    bomb.x -= bomb.vx
+                })
             
-        }else if ((isCollision || isCollisionBackground ) && !this._police.jumpstate) {
+        }else if ((isCollisionFixed || isCollisionBackground || isCollisionRandom) && !this._police.jumpstate) {
 
                 this._police.x -= this._police.vx
                 this._police.y -= this._police.vy
@@ -204,7 +218,8 @@ class Game {
                
              
         
-        } else if (this._police.jumpstate && iscollisionUpper && isCollision ) {
+        } else if (fixedJump) {
+            console.log('elementCollision', elementCollision);
                 if(elementCollision) {
                     this._police.x -= this._police.vx
                     this._police.y -= this._police.vy
@@ -222,6 +237,10 @@ class Game {
                     this._police.vy -= this._police.g 
 
                 }               
+        } else if(randomJump) {
+            this._police.y -= this._police.vy
+            this._police.vy -= this._police.g 
+
         }
         
         const finalBackground = this._bg.v + this._bg.x + this._ctx.canvas.width === this._bg.v * 0.9
@@ -242,6 +261,24 @@ class Game {
         });
 
         if(isCollisionBombs) this._police.life = 0
+
+
+
+
+        this.rewards.forEach (reward => {
+            if (this._police.collisionRewards(reward)) {
+                const resul = reward.sumRewards()
+                if (!isNaN(resul)) {
+                    this.score += resul
+                } else if (resul === 'life') {
+                    this._police.life = 100
+                } else if (resul === 'final') {
+                    this._stop()
+                    this._score.final(this.rewards)
+                }
+                this.rewards = this.rewards.filter (rewardCollision => rewardCollision !== reward)
+            }
+        });
 
     }
 
@@ -407,52 +444,82 @@ class Game {
         this._obstacles.push(new ObstaclesFixed (this._ctx, position + 190, 0, 300, 400))
         this._obstacles.push(new ObstaclesFixed (this._ctx, position + 490, 0, 140, 370))
         this._obstacles.push(new ObstaclesFixed (this._ctx, position + 620, 0, 180, 400)) 
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1560, 320, 50, 50))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1608, 310, 80,70))
-        
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1685, 230, 150, 150))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1835, 200, 163, 190))
-
-
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1530, 320, 150, 50))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1608, 310, 180,70))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1685, 230, 220, 150))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1835, 200, 183, 190))
         this._obstacles.push(new ObstaclesRandom (this._ctx, position + 500, 400, 0))
         this._obstacles.push(new ObstaclesRandom (this._ctx, position + 900, 300, 1))
         this._obstacles.push(new ObstaclesRandom (this._ctx, position + 1100, 400, 0))
-        this._obstacles.push(new ObstaclesRandom (this._ctx, position + 1800, 400, 1, 1, 2))
-        this._obstacles.push(new ObstaclesRandom (this._ctx, position + 2508, 400, 0))
+        this._obstacles.push(new ObstaclesRandom (this._ctx, position + 1800, 400, 2))
     }
 
     _addreward(position = 0) {
-        let numberImg = 3
-        for (let j = 0; j <= 500; j += 500) {
-            for (let i = 0; i < 300; i += 90) {
-                this.rewards.push (new Rewards(this._ctx, position + j + i + 150, 420, numberImg))
+    
+        if (this.levelsNumber === 1 || this.levelsNumber === 0) {
+            let numberImg = 3
+            for (let j = 0; j <= 600; j += 600) {
+                for (let i = 0; i < 400; i += 200) {
+                    this.rewards.push (new Rewards(this._ctx, position + j + i + 150, 420, numberImg))
+                }
+                numberImg++
             }
-            numberImg++
-        }
-        numberImg = 0
-            for (let i = 0; i <= 600; i += 90) {
+            numberImg = 0
+            for (let i = 0; i < 600; i += 200) {
                 this.rewards.push (new Rewards(this._ctx, position + i + 1250, 400, numberImg))
                 numberImg++
                 if (numberImg >= 3) numberImg = 0
             }
-            for (let i = 0; i < 400; i += 100) {
+            for (let i = 0; i <= 300; i += 150) {
                 this.rewards.push (new Rewards(this._ctx, position + i + 1150, 330, 3))
             }
-        numberImg = 1
+            numberImg = 1
             this.rewards.push (new Rewards(this._ctx, position + 1620, 250, numberImg))
-            this.rewards.push (new Rewards(this._ctx, position + 1670, 215, numberImg))
-            this.rewards.push (new Rewards(this._ctx, position + 1710, 190, numberImg))
             
-            for (let i = 0; i < 100; i += 50) {
-                this.rewards.push (new Rewards(this._ctx, position + i + 1750, 180, numberImg))    
+            for (let i = 0; i <= 100; i += 100) {
+                this.rewards.push (new Rewards(this._ctx, position + i + 1700, 180, numberImg))    
             }
-                       
+                    
             if(position != 0) {
                 this.rewards.push (new Rewards(this._ctx, position + 1850, 105, 6, 100, 100))
                 this.lastBg = true
             }else {
                 this.rewards.push (new Rewards(this._ctx, position + 1850, 155, 5))
-            }     
+            } 
+
+        } else {
+            let numberImg = 3
+            for (let j = 0; j <= 500; j += 500) {
+                for (let i = 0; i < 300; i += 90) {
+                    this.rewards.push (new Rewards(this._ctx, position + j + i + 150, 420, numberImg))
+                }
+                numberImg++
+            }
+            numberImg = 0
+                for (let i = 0; i <= 600; i += 90) {
+                    this.rewards.push (new Rewards(this._ctx, position + i + 1250, 400, numberImg))
+                    numberImg++
+                    if (numberImg >= 3) numberImg = 0
+                }
+                for (let i = 0; i < 400; i += 100) {
+                    this.rewards.push (new Rewards(this._ctx, position + i + 1150, 330, 3))
+                }
+            numberImg = 1
+                this.rewards.push (new Rewards(this._ctx, position + 1620, 250, numberImg))
+                this.rewards.push (new Rewards(this._ctx, position + 1670, 215, numberImg))
+                this.rewards.push (new Rewards(this._ctx, position + 1710, 190, numberImg))
+                
+                for (let i = 0; i < 100; i += 50) {
+                    this.rewards.push (new Rewards(this._ctx, position + i + 1750, 180, numberImg))    
+                }
+                        
+                if(position != 0) {
+                    this.rewards.push (new Rewards(this._ctx, position + 1850, 105, 6, 100, 100))
+                    this.lastBg = true
+                }else {
+                    this.rewards.push (new Rewards(this._ctx, position + 1850, 155, 5))
+                } 
+        }  
     }
 
     _createbombs() {

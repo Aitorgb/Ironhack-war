@@ -21,7 +21,7 @@ class Score {
             40,
             40
         )
-        this._ctx.font = "bold 30px Arial";
+        this._ctx.font = "20px pressStart";
         this._ctx.fillStyle = 'white'
         this._ctx.fillText (this._count, this._ctx.canvas.width * 0.90 ,this._ctx.canvas.height * 0.08)
     }
@@ -36,10 +36,17 @@ class Score {
     }
 
     final(rewards) {
-        const level =  sessionStorage.getItem('level')
-        if (level !== null && level === '3') {
-            document.getElementById('next-level').style.display = 'none'
-        }
+        const level =  localStorage.getItem('level')
+        if (level !== null) {
+            if (level === '3') {
+                document.getElementById('next-level').style.display = 'none'
+            } else if(level === '2') {
+                document.getElementById('level-three').disabled = true
+                document.getElementById('level-three').classList.remove('disable')
+            }            
+        } 
+
+
         document.getElementById('score-final').innerText = this._count
         document.getElementById('canvas').classList.remove('visible')
         document.getElementById('canvas').classList.add('no-visible')

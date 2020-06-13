@@ -6,7 +6,7 @@ window.onload = () => {
     const menu = document.getElementById('menu-start')
     const menuFinal = document.getElementById('menu-final')
     const menuVictory = document.getElementById('victory')
-    const mainButton =  document.getElementById('menu-button')
+    const mainButtons =  [...document.querySelectorAll('.menu-button')]
     const ctx = canvas.getContext('2d')
     const loadingBar = document.getElementById('loading-bar')
     const loading = document.getElementById('loading') 
@@ -16,7 +16,7 @@ window.onload = () => {
     const optionsMenu = document.getElementById('options')
     const levelsMenu = document.getElementById('levels-menu')
     const levelButton = document.getElementById('level-button')
-    const levelButtons = [...document.querySelectorAll('#levels-menu > div')]
+    const levelButtons = [...document.querySelectorAll('#levels-menu > button')]
     const nextLevelButton = document.getElementById('next-level')
     const audioButton = new Audio()
     audioButton.src = './sound/boton.mp3'
@@ -34,15 +34,15 @@ window.onload = () => {
         switch (numberlevel) {
             case 'level-one':
                 newGame = new Game(ctx)
-                sessionStorage.setItem('level', 1)
+                localStorage.setItem('level', 1)
                 break;
             case 'level-two':
                 newGame = new Game(ctx, 2)
-                sessionStorage.setItem('level', 2)
+                localStorage.setItem('level', 2)
                 break;
             case 'level-three':
                 newGame = new Game(ctx, 3)
-                sessionStorage.setItem('level', 3)
+                localStorage.setItem('level', 3)
                 break;
         }
         newGame.start()
@@ -73,7 +73,7 @@ window.onload = () => {
             loading.classList.add('no-visible')
             canvas.classList.remove('no-visible')
             canvas.classList.add('visible')
-        }, 1500);
+        }, 3000);
     }
   
 
@@ -84,7 +84,7 @@ window.onload = () => {
         menu.classList.add('no-visible')
         const game = new Game(ctx)
         game.start()
-        sessionStorage.setItem('level', 1)
+        localStorage.setItem('level', 1)
         loadingScreen()
         audioButton.load()
         audioButton.play()
@@ -116,20 +116,22 @@ window.onload = () => {
     })
 
     buttonRetry.addEventListener('click', () => {
-       const level =  sessionStorage.getItem('level')
+       const level =  localStorage.getItem('level')
         let newGame
         switch (level) {
             case '1':
                 newGame = new Game(ctx)
-                sessionStorage.setItem('level', 1)
+                localStorage.setItem('level', 1)
                 break;
             case '2':
                 newGame = new Game(ctx, 2)
-                sessionStorage.setItem('level', 2)
+                localStorage.setItem('level', 2)
+                localStorage.setItem('levelGame', 2)
                 break;
             case '3':
                 newGame = new Game(ctx, 3)
-                sessionStorage.setItem('level', 3)
+                localStorage.setItem('level', 3)
+                localStorage.setItem('levelGame', 3)
                 break;
         }
 
@@ -140,23 +142,23 @@ window.onload = () => {
     })
 
     nextLevelButton.addEventListener('click', () => {
-        const level =  sessionStorage.getItem('level')
+        const level =  localStorage.getItem('level')
          let newGame
 
         if (level !== null) {
             switch (level) {
                 case '1':
                     newGame = new Game(ctx, 2)
-                    sessionStorage.setItem('level', 2)
+                    localStorage.setItem('level', 2)
                     break;
                 case '2':
                     newGame = new Game(ctx, 3)
-                    sessionStorage.setItem('level', 3)
+                    localStorage.setItem('level', 3)
                     break;
             }
         } else {
             newGame = new Game(ctx)
-            sessionStorage.setItem('level', 1)
+            localStorage.setItem('level', 1)
         }
          newGame.start()
          menuVictory.classList.add('no-visible')
@@ -167,14 +169,20 @@ window.onload = () => {
 
 
 
-    mainButton.addEventListener('click', () => {
-        menu.classList.remove('no-visible')
-        menu.classList.add('visible')
-        menuVictory.classList.remove('visible')
-        menuVictory.classList.add('no-visible')
-        audioButton.load()
-        audioButton.play()
-    })
+     mainButtons.forEach (button => {
+         button.addEventListener('click', () => {
+            menu.classList.remove('no-visible')
+            menu.classList.add('visible')
+            menuVictory.classList.remove('visible')
+            menuVictory.classList.add('no-visible')
+            menuFinal.classList.remove('visible')
+            menuFinal.classList.add('no-visible')
+            audioButton.load()
+            audioButton.play()
+         })
+     })
+     
+     
 
     backButton.addEventListener('click', () => {
         menu.classList.remove('no-visible')
@@ -189,9 +197,7 @@ window.onload = () => {
         audioButton.play()
     })
 
-    levelButtons.forEach (button => button.addEventListener('click', () => {
-        levelsButttonGame(button)
-    }))
+    levelButtons.forEach (button => button.addEventListener('click', () => levelsButttonGame(button)))
 
 
    

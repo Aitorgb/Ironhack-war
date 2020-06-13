@@ -31,7 +31,7 @@ class Police {
         this.damage = 20
 
         this.collisionObjectFloor = true
-
+        this.collisionJumpUpper = false
         this.weapon = new Weapon(this)
     }
 
@@ -93,17 +93,19 @@ class Police {
             if  (this._floor()) {
             this.jump_position = this.y + this.height
             }
+            if (this._floor() || this.collisionJumpUpper)
             this.vy = -5
             this.g = 0.1
             this.cutY === 0 ? this.cutY = 2 : this.cutY = 3
             this.jumpstate = true
             this._img.frameIndex = 4
+            
     }
 
 
 
     _floor() {
-        return (this.y >= this._ctx.canvas.height * 0.50) //&& this.collisionObjectFloor
+        return (this.y >= this._ctx.canvas.height * 0.50) && this.collisionObjectFloor
     }
 
 
@@ -127,6 +129,7 @@ class Police {
         } 
 
     }
+    
     collisionUpper(element) {
         const colY =  (this.y + this.height) * 0.95 <= element.y + element.height * 0.2
         const colX = this.x + this.width  > element.x && this.x < (element.x + element.width)
@@ -145,15 +148,19 @@ class Police {
         const colX = (this.x  < 10) || this.x + this.width > this._ctx.canvas.width
         const colY = (this.y  < this._ctx.canvas.height * 0.50) || (this.y + this.height) * 0.99 > this._ctx.canvas.height
         return colX || colY
-
-        //(this.y  < this._ctx.canvas.height * 0.50) || 
     }
 
 
     otherCollision(element) {
-        const colX = (this.x + this.width) * 0.98 > element.x && this.x < (element.x + element.width)
+        const colX = (this.x + this.width) * 0.9 > element.x && this.x < (element.x + element.width) * 0.85
         //const colX = this.x + this.width  > element.x && this.x < (element.x + element.width)
         const colY = (this.y + this.height) * 0.95 > element.y && this.y + this.height * 0.98 < (element.y + element.height)
+        return colX && colY
+    }
+
+    collisionRewards(element) {
+        const colX = (this.x + this.width) > element.x && this.x < (element.x + element.width)
+        const colY = (this.y + this.height) > element.y && this.y + this.height * 0.75 < (element.y + element.height)
         return colX && colY
     }
 

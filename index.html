@@ -4,15 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    
     <link rel="stylesheet" href="styles/style.css" />
     <title>IronWar || Aitor</title>
   </head>
   <body>
     <div id="game-board">
     <div id="menu-start" class="menu">
-      <div class="button" id="play-button"></div>
-      <div class='button' id="setting-button"></div>
-      <div class='button' id="level-button"></div>
+      <button class="button" id="play-button"></button>
+      <button class='button' id="setting-button"></button>
+      <button class='button' id="level-button"></button>
     </div>
       <div id="loading" class="menu no-visible">
         <progress id="loading-bar" max="100" value="0" ></progress>
@@ -30,21 +31,22 @@
             <img src="./images/keyboard.png" alt="keyboard"/>
           </div>
           <div id="levels-menu" class="no-visible">
-            <div class="button" id="level-one"></div>
-            <div class='button' id="level-two"></div>
-            <div class='button' id="level-three"></div>
+            <button class="button-level" id="level-one"></button>
+            <button class='button-level' id="level-two"></button>
+            <button class='button-level disable' id="level-three" disabled></button>
           </div>
-        <div class="button" id="back-button"></div>
+        <button class="button" id="back-button"></button>
       </div>
       <canvas id="canvas" class="no-visible" width="1000" height="500"></canvas>
-      <div id="menu-final" class="menu no-visible">
+      <div id="menu-final" class="menu  no-visible">
         <div class="score" id="score-failed">0</div>
-        <div class="button" id="retry-button"></div>
+        <button class="button menu-button"></button>
+        <button class="button" id="retry-button"></button>
       </div>
       <div id="victory" class="menu no-visible">
         <div class="score" id="score-final">0</div>
-        <div class="button" id="menu-button"></div>
-        <div class="button" id="next-level"></div>
+        <button class="button menu-button"></button>
+        <button class="button" id="next-level"></button>
       </div>
     </div>
     <script type="text/javascript" src="js/levels.js"></script>
