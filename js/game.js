@@ -21,7 +21,7 @@ class Game {
         this.audioGame = new Audio('./sound/principal.mp3')
         this.audioGame.volume = 0.5
         this.audioGame.loop = true
-        
+
         this._levels = new Levels (this)
         this.levelsNumber = number
         this.intervalBoomTime = 3000
@@ -69,8 +69,6 @@ class Game {
         this._terrorist.forEach(terrorist => {
             terrorist.draw()
         })
-       
-
         if (this.tick++ > 10) {
             this.score++
             this.tick = 0
@@ -133,7 +131,6 @@ class Game {
             return obstacle instanceof ObstaclesFixed
         })
        
-
         const isCollisionFixed = obstaclesFixedCollision.some (obstacle => {
                 return this._police.otherCollision(obstacle)
             });
@@ -427,7 +424,7 @@ class Game {
         this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1530, 320, 150, 50))
         this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1608, 310, 180,70))
         this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1685, 230, 220, 150))
-        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1835, 200, 183, 190))
+        this._obstacles.push(new ObstaclesFixed (this._ctx, position + 1835, 220, 183, 190))
         this._obstacles.push(new ObstaclesRandom (this._ctx, position + 500, 400, 0))
         this._obstacles.push(new ObstaclesRandom (this._ctx, position + 900, 300, 1))
         this._obstacles.push(new ObstaclesRandom (this._ctx, position + 1100, 400, 0))
