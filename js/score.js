@@ -9,6 +9,9 @@ class Score {
         this.x = this._ctx.canvas.width * 0.84
         this.y = this._ctx.canvas.height * 0.01
         this.audioFailed = new Audio('./sound/gameover.mp3')
+        this.audioNextLevel = new Audio('./sound/subir-nivel.mp3')
+        
+
     }
 
     draw(count) {
@@ -35,15 +38,18 @@ class Score {
         document.getElementById('menu-final').classList.add('visible')
     }
 
-    final(rewards) {
+    final() {
         const level =  localStorage.getItem('level')
+        this.audioNextLevel.play()
         if (level !== null) {
             if (level === '3') {
                 document.getElementById('next-level').style.display = 'none'
+
             } else if(level === '2') {
                 document.getElementById('level-three').disabled = true
                 document.getElementById('level-three').classList.remove('disable')
-            }            
+                
+            }  
         } 
 
 

@@ -9,12 +9,6 @@ class ObstaclesFixed extends Obstacles {
 
 
     draw() {
-        this._ctx.fillRect (
-            this.x,
-            this.y,
-            this.width,
-            this.height
-        )
     }
 
 

@@ -13,6 +13,8 @@ class Rewards {
         this.width = w
         this.height = h 
         this.audioRewards = new Audio('./sound/rewards.mp3')
+        this.audioRewards.volume = 0.4
+        
     }
 
     draw() {

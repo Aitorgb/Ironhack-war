@@ -178,11 +178,11 @@ progress[value]{
   position: absolute;
   right: 3em;
   bottom: 3em;
-  background-size:contain
+  background-size: contain;
 }
 #level-button {
   background: url('../images/btn-levels.png') no-repeat;
-  background-size:contain
+  background-size: contain;
  
 }
 
@@ -196,22 +196,22 @@ progress[value]{
 #play-button {
   background: url('../images/btn-play.png') no-repeat;
   margin-top: 8em;
-  background-size:contain
+  background-size: contain;
 }
 
 #setting-button {
   background: url('../images/btn-how-to-play.png') no-repeat;
-  background-size:contain
+  background-size: contain;
 }
 
 .menu-button {
   background: url('../images/button-menu.png') no-repeat;
-  background-size:contain
+  background-size: contain;
 }
 
 #next-level {
   background: url('../images/button-next-level.png') no-repeat;
-  background-size:contain
+  background-size: contain;
 }
 
 #menu-button, #next-level {
@@ -225,7 +225,7 @@ button {
 
 .button {
   border:0;
-  width: 23vh;
+  width: 24vh;
 
   height: 5em;
 }

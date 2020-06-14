@@ -1,5 +1,5 @@
 class Game {
-    constructor (ctx, number = 0) {
+    constructor (ctx, number = 0, score = 0) {
         this._ctx = ctx
         this._idInterval = null
         this._bg = new BackgroundGame (ctx)
@@ -17,9 +17,9 @@ class Game {
         this._setListener()
         
         this.countShoot = 49
-        this.score = -5
+        this.score =  score - 14
         this.audioGame = new Audio('./sound/principal.mp3')
-        this.audioGame.volume = 0.3
+        this.audioGame.volume = 0.5
         this.audioGame.loop = true
         
         this._levels = new Levels (this)
@@ -32,6 +32,7 @@ class Game {
    
 
     start() {
+        console.log(this.score);
         this._idInterval = setInterval(() => {
             this._clear()
             this._draw()
@@ -94,7 +95,7 @@ class Game {
     }
 
     _preload() {
-        //this.audioGame.play()
+        this.audioGame.play()
         this._numberLevels()
         this._addObstacle()
         this._addObstacle(this._bg.v)
@@ -124,13 +125,6 @@ class Game {
         const isCollisionBackground = this._obstacles.some (obstacle => {
             return this._police.collisionBg()
         });
-        // const isCollision = this._obstacles.some (obstacle => {
-        //     return this._police.otherCollision(obstacle)
-        // });
-        // console.log(isCollision);
-        //isCollision ? this._police.collisionObjectFloor = false : this._police.collisionObjectFloor = true
-         
-        
 
         const obstaclesRandomCollision = this._obstacles.filter( obstacle => {
             return obstacle instanceof ObstaclesRandom
@@ -159,31 +153,18 @@ class Game {
             return this._police.collisionUpper(obstacle)
         });
 
-
-        // const elementCollision = obstaclesFixedCollision.filter(obstacle => {
-            
-        //     return this._police.collisionX(obstacle)
-        // })
-
         const elementCollision = obstaclesFixedCollision.some(obstacle => {
             return this._police.collisionX(obstacle)
         })
 
 
-        // console.log('collisionX', elementCollision);
+      
 
         const newBgCollision = this._bg.x > 0
-        console.log('jump', this._police.jumpstate);
-        console.log('isCollision', isCollisionFixed);
-        console.log('isCollisionUpper', iscollisionUpperFixed);
         
         const fixedJump = this._police.jumpstate && iscollisionUpperFixed && isCollisionFixed
         const randomJump = this._police.jumpstate && iscollisionUpperRandom && isCollisionRandom
-
-        console.log('fixed',fixedJump);
-        console.log('random', randomJump);
-   
-
+        
         if (newBgCollision) {
             if (this._police.x < 15) {
                 this._police.x -= this._police.vx
@@ -219,7 +200,7 @@ class Game {
              
         
         } else if (fixedJump) {
-            console.log('elementCollision', elementCollision);
+            
                 if(elementCollision) {
                     this._police.x -= this._police.vx
                     this._police.y -= this._police.vy
@@ -261,10 +242,8 @@ class Game {
         });
 
         if(isCollisionBombs) this._police.life = 0
-
-
-
-
+       this._bombs =  this._bombs.filter (bomb => !bomb.final())
+      
         this.rewards.forEach (reward => {
             if (this._police.collisionRewards(reward)) {
                 const resul = reward.sumRewards()
@@ -274,7 +253,8 @@ class Game {
                     this._police.life = 100
                 } else if (resul === 'final') {
                     this._stop()
-                    this._score.final(this.rewards)
+                    this._score.final()
+                    localStorage.setItem('score', this.score)
                 }
                 this.rewards = this.rewards.filter (rewardCollision => rewardCollision !== reward)
             }
@@ -523,11 +503,7 @@ class Game {
     }
 
     _createbombs() {
-        this._bombs = [
-            new Bomb (this._ctx, this._numberRandom(), this._bg),
-            new Bomb (this._ctx, this._numberRandom(), this._bg),
-            new Bomb (this._ctx, this._numberRandom(), this._bg)
-        ]
+        this._bombs.push(new Bomb (this._ctx, this._numberRandom(), this._bg))
     }
 
     _numberRandom() {
@@ -535,6 +511,7 @@ class Game {
     }
 
     bombs() {
+       
         setInterval(() => {
             this._createbombs()
         }, this.intervalBoomTime);

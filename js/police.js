@@ -120,7 +120,7 @@ class Police {
      _checkJump() {
 
 
-        if (this.jump_position !== this._ctx.canvas.height && this.jump_position < this.y + this.height) {
+        if (this.jumpstate && this.jump_position < this.y + this.height) {
             this.y = this.jump_position - this.height
             this.vy = this.g = 0
             this.jumpstate = false
@@ -133,14 +133,11 @@ class Police {
     collisionUpper(element) {
         const colY =  (this.y + this.height) * 0.95 <= element.y + element.height * 0.2
         const colX = this.x + this.width  > element.x && this.x < (element.x + element.width)
-        // console.log('police', this.y + this.height);
-        // console.log('y',  element.y);
-        // console.log('total', element.y + element.height  * 0.10 );
         return colY && colX
     }
 
     collisionX(element) {
-        const colX = this.x + this.width > element.x && this.x + this.width < element.x + element.width * 0.05
+        const colX = this.x + this.width > element.x && this.x + this.width < element.x + element.width * 0.03
         return colX
     }
 
@@ -153,7 +150,6 @@ class Police {
 
     otherCollision(element) {
         const colX = (this.x + this.width) * 0.9 > element.x && this.x < (element.x + element.width) * 0.85
-        //const colX = this.x + this.width  > element.x && this.x < (element.x + element.width)
         const colY = (this.y + this.height) * 0.95 > element.y && this.y + this.height * 0.98 < (element.y + element.height)
         return colX && colY
     }

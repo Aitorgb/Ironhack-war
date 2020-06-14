@@ -65,7 +65,7 @@ window.onload = () => {
         const loadingIntervalId = setInterval(() => {
             loadingBar.setAttribute('value', load)
             load++
-        }, 10);
+        }, 25);
         
        setTimeout(() => {
             clearInterval(loadingIntervalId)
@@ -143,16 +143,17 @@ window.onload = () => {
 
     nextLevelButton.addEventListener('click', () => {
         const level =  localStorage.getItem('level')
+        const score = parseInt(localStorage.getItem('score'))
          let newGame
 
         if (level !== null) {
             switch (level) {
                 case '1':
-                    newGame = new Game(ctx, 2)
+                    newGame = new Game(ctx, 2, score)
                     localStorage.setItem('level', 2)
                     break;
                 case '2':
-                    newGame = new Game(ctx, 3)
+                    newGame = new Game(ctx, 3, score)
                     localStorage.setItem('level', 3)
                     break;
             }
