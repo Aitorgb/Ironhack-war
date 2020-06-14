@@ -144,7 +144,7 @@ class Game {
         const iscollisionUpperFixed = obstaclesFixedCollision.some (obstacle => {
             return this._police.collisionUpper (obstacle)
         });
-        iscollisionUpperFixed ? this._police.collisionJumpUpper = true : this._police.collisionJumpUpper = false
+        (iscollisionUpperFixed && isCollisionFixed) ? this._police.collisionJumpUpper = true : this._police.collisionJumpUpper = false
 
         const iscollisionUpperRandom = obstaclesRandomCollision.some (obstacle => {
             return this._police.collisionUpper(obstacle)

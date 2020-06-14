@@ -90,6 +90,7 @@ class Police {
 
 
     jump() {
+        console.log(this.collisionJumpUpper);
             if  (this._floor()) {
             this.jump_position = this.y + this.height
             }
