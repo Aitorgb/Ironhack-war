@@ -29,7 +29,6 @@ class Game {
         this.intervalBoomTime = 3000
 
         this._preload()
-        this.map = []
         
     }
 
