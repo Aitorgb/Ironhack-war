@@ -5,6 +5,8 @@ class Game {
         this._bg = new BackgroundGame (ctx)
         this._police = new Police (ctx)
         this._score = new Score (ctx)
+
+    
        
         this.frameNumber = 0
         this.tick = 0
@@ -27,12 +29,13 @@ class Game {
         this.intervalBoomTime = 3000
 
         this._preload()
+        this.map = []
+        
     }
 
    
 
     start() {
-        console.log(this.score);
         this._idInterval = setInterval(() => {
             this._clear()
             this._draw()
@@ -73,6 +76,7 @@ class Game {
             this.score++
             this.tick = 0
         }
+       
     }
 
     _move() {
@@ -302,6 +306,8 @@ class Game {
         this._score.scoreFailed()
     }
 
+
+
     _setListener() {
             document.addEventListener('keydown', event => {
                 switch(event.keyCode) {
@@ -349,8 +355,7 @@ class Game {
                     case M_BUTTON:
                         this._police.weapon.shoot()
                 }
-
-
+                event.preventDefault()
             })
 
             document.addEventListener('keyup', event => {
@@ -388,7 +393,24 @@ class Game {
                             this._police.vy = 0
                             break;
                     }
+                    event.preventDefault()
             })
+    }
+
+    move() {
+        this._police.animate()
+        this._police.vx = 0.5
+        this._police.cutY = 0
+        this._bg.vx = -2
+        this._obstacles.forEach (obstacle => {
+            obstacle.vx = -2
+        })
+        this.rewards.forEach (reward => {
+            reward.vx = -2
+        })
+        this._bombs.forEach (bomb => {
+            bomb.vx = -2
+        })
     }
 
 

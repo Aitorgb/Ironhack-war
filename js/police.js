@@ -90,7 +90,6 @@ class Police {
 
 
     jump() {
-        console.log(this.collisionJumpUpper);
             if  (this._floor()) {
             this.jump_position = this.y + this.height
             }
@@ -150,7 +149,7 @@ class Police {
 
 
     otherCollision(element) {
-        const colX = (this.x + this.width) * 0.9 > element.x && this.x < (element.x + element.width) * 0.85
+        const colX = (this.x + this.width) * 0.9 > element.x && this.x < (element.x + element.width) * 0.9
         const colY = (this.y + this.height) * 0.95 > element.y && this.y + this.height * 0.98 < (element.y + element.height)
         return colX && colY
     }
