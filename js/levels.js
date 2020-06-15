@@ -13,7 +13,7 @@ class Levels {
     }
 
     thirdLevel() {
-        this._game.intervalBoomTime = 2000
+        this._game.intervalBoomTime = 1000
         this._game.bombs()
         this._game._police.damage = 50
         this._game._terrorist.forEach(terrorist => {

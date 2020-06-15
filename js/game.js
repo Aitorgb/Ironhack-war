@@ -26,7 +26,7 @@ class Game {
 
         this._levels = new Levels (this)
         this.levelsNumber = number
-        this.intervalBoomTime = 3000
+        this.intervalBoomTime = 2000
 
         this._preload()
         
