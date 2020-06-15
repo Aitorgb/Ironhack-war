@@ -23,11 +23,19 @@ body {
 .menu {
   position: absolute;
   left: 0;
-  top:18em;
+  top:20%;
   right: 0;
   margin: auto;
   width: 1000px;
-  height: 64vh;
+  height: 60%;
+}
+
+canvas {
+  position: absolute;
+  left: 0;
+  top: 20%;
+  right: 0;
+  margin: auto;
 }
 
 #menu-final {
@@ -52,7 +60,11 @@ body {
 
 canvas {
   border: 2px solid black;
-  margin-top: 18em;
+  position: absolute;
+  left: 0;
+  top: 20%;
+  right: 0;
+  margin: auto;
 }
 
 #menu-start{
@@ -195,7 +207,7 @@ progress[value]{
 
 #play-button {
   background: url('../images/btn-play.png') no-repeat;
-  margin-top: 8em;
+  margin-top: 10%;
   background-size: contain;
 }
 
