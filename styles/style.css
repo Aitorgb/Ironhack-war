@@ -195,6 +195,7 @@ progress[value]{
 #level-button {
   background: url('../images/btn-levels.png') no-repeat;
   background-size: contain;
+  margin-bottom: 5%;
  
 }
 
@@ -238,7 +239,6 @@ button {
 .button {
   border:0;
   width: 24vh;
-
-  height: 5em;
+  height: 4em;
 }
 
