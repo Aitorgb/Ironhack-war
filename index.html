@@ -4,51 +4,57 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     
     <link rel="stylesheet" href="styles/style.css" />
     <title>IronWar || Aitor</title>
   </head>
   <body>
-    <div id="game-board">
-    <div id="menu-start" class="menu">
-      <button class="button" id="play-button"></button>
-      <button class='button' id="setting-button"></button>
-      <button class='button' id="level-button"></button>
-    </div>
-      <div id="loading" class="menu no-visible">
-        <progress id="loading-bar" max="100" value="0" ></progress>
-      </div>
-      <div class="menu no-visible" id="options">
-          <div id="how-to-play" class="no-visible">
-            <div>
-            <div class="indicationGame"><span>Walk forward</span><span class="letter">&#10148;</span></div>
-            <div class="indicationGame"><span>Walk back</span><span class="letter" id="arrow-back">&#10148;</span></div>
-            <div class="indicationGame"><span>Walk left</span><span class="letter" id="arrow-up">&#10148;</span></div>
-            <div class="indicationGame"><span>Walk rigth</span><span class="letter" id="arrow-bottom">&#10148;</span></div>
-            <div class="indicationGame"><span>Jump</span><span class="letter">SPACE</span></div>
-            <div class="indicationGame"><span>Shoot</span><span class="letter">M</span></div>
+
+      <div id="game-board">
+        <div class="container">
+          <div id="menu-start" class="menu">
+            <button class="button" id="play-button"></button>
+            <button class='button' id="setting-button"></button>
+            <button class='button' id="level-button"></button>
+          </div>
+        <div id="loading" class="menu no-visible">
+          <progress id="loading-bar" max="100" value="0" ></progress>
+        </div>
+        <div class="menu no-visible" id="options">
+            <div id="how-to-play" class="no-visible">
+              <div>
+              <div class="indicationGame"><span>Walk forward</span><span class="letter">&#10148;</span></div>
+              <div class="indicationGame"><span>Walk back</span><span class="letter" id="arrow-back">&#10148;</span></div>
+              <div class="indicationGame"><span>Walk left</span><span class="letter" id="arrow-up">&#10148;</span></div>
+              <div class="indicationGame"><span>Walk rigth</span><span class="letter" id="arrow-bottom">&#10148;</span></div>
+              <div class="indicationGame"><span>Jump</span><span class="letter">SPACE</span></div>
+              <div class="indicationGame"><span>Shoot</span><span class="letter">M</span></div>
+              </div>
+              <img src="./images/keyboard.png" alt="keyboard"/>
             </div>
-            <img src="./images/keyboard.png" alt="keyboard"/>
-          </div>
-          <div id="levels-menu" class="no-visible">
-            <button class="button-level" id="level-one"></button>
-            <button class='button-level' id="level-two"></button>
-            <button class='button-level disable' id="level-three" disabled></button>
-          </div>
-        <button class="button" id="back-button"></button>
+            <div id="levels-menu" class="no-visible">
+              <button class="button-level" id="level-one"></button>
+              <button class='button-level' id="level-two"></button>
+              <button class='button-level disable' id="level-three" disabled></button>
+            </div>
+          <button class="button" id="back-button"></button>
+        </div>
+        <canvas id="canvas" class="no-visible" width="1000" height="500"></canvas>
+        <div id="menu-final" class="menu no-visible">
+          <div class="score" id="score-failed">0</div>
+          <button class="button menu-button"></button>
+          <button class="button" id="retry-button"></button>
+        </div>
+        <div id="victory" class="menu no-visible">
+          <div class="score" id="score-final">0</div>
+          <button class="button menu-button"></button>
+          <button class="button" id="next-level"></button>
+        </div>
       </div>
-      <canvas id="canvas" class="no-visible" width="1000" height="500"></canvas>
-      <div id="menu-final" class="menu  no-visible">
-        <div class="score" id="score-failed">0</div>
-        <button class="button menu-button"></button>
-        <button class="button" id="retry-button"></button>
-      </div>
-      <div id="victory" class="menu no-visible">
-        <div class="score" id="score-final">0</div>
-        <button class="button menu-button"></button>
-        <button class="button" id="next-level"></button>
-      </div>
-    </div>
+    </div>  
     <script type="text/javascript" src="js/levels.js"></script>
     <script type="text/javascript" src="js/score.js"></script>
     <script type="text/javascript" src="js/bombs.js"></script>

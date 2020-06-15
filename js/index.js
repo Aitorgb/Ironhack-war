@@ -22,11 +22,6 @@ window.onload = () => {
     audioButton.src = './sound/boton.mp3'
 
 
-
-
-
-
-
     function levelsButttonGame (button) {
         const numberlevel = button.getAttribute('id')
         let newGame
@@ -116,6 +111,8 @@ window.onload = () => {
     })
 
     buttonRetry.addEventListener('click', () => {
+        audioButton.load()
+        audioButton.play()
        const level =  localStorage.getItem('level')
         let newGame
         switch (level) {
@@ -139,9 +136,12 @@ window.onload = () => {
         menuFinal.classList.add('no-visible')
         menuFinal.classList.remove('visible')
         loadingScreen()
+        
     })
 
     nextLevelButton.addEventListener('click', () => {
+        audioButton.load()
+        audioButton.play()
         const level =  localStorage.getItem('level')
         const score = parseInt(localStorage.getItem('score'))
          let newGame

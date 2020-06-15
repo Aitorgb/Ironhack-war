@@ -96,7 +96,12 @@ class Police {
             if (this._floor() || this.collisionJumpUpper)
             this.vy = -5
             this.g = 0.1
-            this.cutY === 0 ? this.cutY = 2 : this.cutY = 3
+            if (this.cutY === 0 || this.cutY === 2) {
+                this.cutY = 2
+            } else {
+                this.cutY = 3
+            }
+
             this.jumpstate = true
             this._img.frameIndex = 4
             
